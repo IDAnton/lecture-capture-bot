@@ -40,7 +40,7 @@ class timetable():
                 week_data = []
         for i in data:
             print(i)
-            print()
+
 
 
 t = timetable()
