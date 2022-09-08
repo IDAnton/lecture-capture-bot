@@ -25,7 +25,7 @@ class timetable():
                 cell_data = []
                 for cell in cells:
                     subject = cell.find(class_ = "subject").text
-                    subject = re.sub(r"[^а-яА-Я.] +","",subject)
+                    subject = re.sub(r"[^а-яА-Я.0-9] +","",subject)
                     if subject == "Контрольные раб.":
                         continue
                     tutor = cell.find(class_ = "tutor").text
@@ -39,12 +39,34 @@ class timetable():
                 if time % 6 == 5:
                     data.append(week_data)
                     week_data = []
-
             self.update = datetime.datetime.now()
             self.tt = data
         except Exception as e:
             print(e)
+    
+    def get_current(self, time):
+        start_time = ["09:00", "10:50", "12:40",
+                        "14:30", "16:20", "18:10", "21:10"]
+        now = datetime.datetime.now()
+        # time = now.strftime('%H:%M')
+        # tmp = now
+        # for t in start_time:
+        #     tmp_time = datetime.datetime.strptime(t, '%H:%M')
+        #     tmp = tmp.replace(hour = tmp_time.hour, minute = tmp_time.minute)
+        #     print((now - tmp))
+        day = now.weekday()
+        week = now.isocalendar()[1]
+        if week is not None:
+            week = "Нечетная" if week % 2 == 1 else "Четная"
+            if week == self.tt[time][day][0]["week"]:
+                lesson = self.tt[time][day][0]
+            else:
+                lesson = self.tt[time][day][1]
+        else:
+            lesson = self.tt[time][day]
+        print(lesson)
 
 
 t = timetable()
 t.update()
+t.get_current()
